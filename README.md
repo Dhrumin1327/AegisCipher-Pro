@@ -1,4 +1,4 @@
-# AegisCipher Pro 🛡️
+# AegisCipher-Pro
 
 AegisCipher Pro is an enterprise-grade, highly polished commercial-grade cybersecurity console tailored for digital compliance, security audits, and offline-first text payload protection. It features a modern, ultra-responsive web application that is fully standalone and optimized for running on localhost inside Visual Studio Code.
 
@@ -126,4 +126,78 @@ AegisCipher Pro processes all encryption, decryption, and hash operations **enti
 - **DES-CBC**: Maintains backwards compliance for legacy data payloads.
 - **RSA-2048**: Generates asymmetric public/private key pairs and executes RSA ciphers using standard RSA-OAEP padding.
 - **Cryptographic Hashing**: Instantly generates MD5, SHA-1, SHA-256, and SHA-512 cryptographic checksums with visual audit trails.
-- **SOC Security Logger**: Maintains a dynamic, searchable audit log preserved securely across browser sessions via standard `localStorage`.
+- **SOC Security Logger**: Maintains a dynamic, searchable audit log preserved securely across browser sessions via standard `localStorage`.+
+
+---
+
+# 🤝 Contribution
+
+Contributions, issues, and feature requests are welcome.
+
+If you'd like to contribute to this project:
+
+1. Fork this repository.
+2. Create a new feature branch (`git checkout -b feature-name`).
+3. Commit your changes (`git commit -m "Add new feature"`).
+4. Push to your branch (`git push origin feature-name`).
+5. Open a Pull Request.
+
+---
+
+# 👨‍💻 Author & Developer
+
+### **Dhrumin Patel**
+
+**Cyber Security & Forensic Science Student**
+
+🔗 **GitHub:**  
+https://github.com/Dhrumin1327
+
+💼 **LinkedIn:**  
+https://www.linkedin.com/in/dhrumin-patel-0412792a5/
+
+---
+
+# 📞 Support
+
+If you found this project useful, please consider:
+
+- ⭐ Starring this repository
+- 🍴 Forking this repository
+- 📢 Sharing it with others
+
+For suggestions, improvements, collaborations, or any queries, feel free to connect with me via **GitHub** or **LinkedIn**.
+
+---
+
+# ⚠️ Disclaimer
+
+This project is developed for **educational, academic, and research purposes only**. It is intended to demonstrate cryptographic concepts and secure text encryption techniques.
+
+The author is **not responsible for any misuse** of this software.
+
+---
+
+# 🙏 Acknowledgements
+
+Special thanks to:
+
+- Python Community
+- Flask Community
+- Cryptography Documentation
+- Open Source Contributors
+
+---
+
+# 📄 License
+
+This project is licensed under the **MIT License**.
+
+You are free to use, modify, and distribute this project for educational or personal purposes, provided that proper credit is given to the original author.
+
+---
+
+<p align="center">
+  Made with ❤️ by <strong>Dhrumin Patel</strong><br><br>
+  ⭐ If you found this project helpful, don't forget to Star the Repository.
+</p>
