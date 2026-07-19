@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard | Secure Text Encryption Suite Pro{% endblock %}
+
+{% block extra_head %}
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="space-y-4">
+    <!-- Page Header -->
+    <div class="row align-items-center justify-content-between mb-4">
+        <div class="col-md-6">
+            <h2 class="fw-bold m-0 text-white">System Console Overview</h2>
+            <p class="text-secondary small">Real-time status, cryptographic counters, and recent system operations.</p>
+        </div>
+        <div class="col-md-4 text-md-end">
+            <div class="d-inline-flex align-items-center gap-3 bg-dark border border-secondary border-opacity-25 px-4 py-2 rounded-4">
+                <div class="text-secondary font-monospace small"><i class="fa-solid fa-clock text-info me-1"></i> <span id="dash-time">Loading...</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-3">
+            <div class="glass-card p-4 h-100">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="text-muted font-monospace small uppercase">ENCRYPTIONS</span>
+                    <i class="fa-solid fa-lock text-primary fs-4"></i>
+                </div>
+                <h3 class="fw-bold text-light m-0">{{ stats.totalEncryptions }}</h3>
+                <span class="text-muted small mt-2 d-block">Symmetric & Asymmetric</span>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="glass-card p-4 h-100">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="text-muted font-monospace small uppercase">DECRYPTIONS</span>
+                    <i class="fa-solid fa-lock-open text-teal fs-4" style="color: #0d9488;"></i>
+                </div>
+                <h3 class="fw-bold text-light m-0">{{ stats.totalDecryptions }}</h3>
+                <span class="text-muted small mt-2 d-block">Successfully Verified</span>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="glass-card p-4 h-100">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="text-muted font-monospace small uppercase">HASH digests</span>
+                    <i class="fa-solid fa-hashtag text-warning fs-4"></i>
+                </div>
+                <h3 class="fw-bold text-light m-0">{{ stats.totalHashes }}</h3>
+                <span class="text-muted small mt-2 d-block">MD5, SHA1 & SHA2</span>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="glass-card p-4 h-100">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="text-muted font-monospace small uppercase">SECURE KEYS</span>
+                    <i class="fa-solid fa-key text-info fs-4"></i>
+                </div>
+                <h3 class="fw-bold text-light m-0">{{ stats.totalKeyGens }}</h3>
+                <span class="text-muted small mt-2 d-block">AES, DES, RSA Cryptokeys</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Workspace charts & logs -->
+    <div class="row g-4">
+        <!-- Cryptographic Operations Chart -->
+        <div class="col-lg-7">
+            <div class="glass-card p-4 h-100 d-flex flex-column justify-content-between">
+                <div>
+                    <h5 class="fw-bold text-white mb-3"><i class="fa-solid fa-chart-simple text-primary me-2"></i> Crypto-Engine Telemetry</h5>
+                    <div style="height: 220px; position: relative;">
+                        <canvas id="cryptoChart"></canvas>
+                    </div>
+                </div>
+                <div class="border-top border-secondary border-opacity-25 pt-3 mt-4 text-secondary small">
+                    <i class="fa-solid fa-info-circle me-1 text-info"></i> Session activity last event: <span class="text-light">{{ stats.lastActivity }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Audit Logs -->
+        <div class="col-lg-5">
+            <div class="glass-card p-4 h-100">
+                <h5 class="fw-bold text-white mb-3"><i class="fa-solid fa-shield-halved text-success me-2"></i> Recent Audit Logs</h5>
+                
+                {% if not recent_logs %}
+                    <div class="text-center py-5 text-muted small">
+                        <i class="fa-solid fa-clipboard-check d-block mb-3 fs-3 opacity-25"></i>
+                        No recorded transactions in this audit history.
+                    </div>
+                {% else %}
+                    <div class="d-flex flex-column gap-3">
+                        {% for log in recent_logs %}
+                            <div class="p-3 bg-dark bg-opacity-50 border border-secondary border-opacity-10 rounded-3 small font-monospace">
+                                <div class="d-flex justify-content-between mb-1">
+                                    <span class="badge bg-secondary text-light">{{ log.algorithm }}</span>
+                                    <span class="text-muted text-xs">{{ log.timestamp.split(' ')[1] }}</span>
+                                </div>
+                                <div class="fw-bold text-light">{{ log.operation }}</div>
+                                <div class="text-secondary text-truncate" title="{{ log.detail }}">{{ log.detail }}</div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    function updateClock() {
+        const now = new Date();
+        const clockEl = document.getElementById('dash-time');
+        if (clockEl) clockEl.innerText = now.toLocaleTimeString();
+    }
+    updateClock();
+    setInterval(updateClock, 1000);
+
+    // Render operations chart via Chart.js
+    const ctx = document.getElementById('cryptoChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['AES', 'DES', 'RSA', 'Hashes', 'Keys'],
+            datasets: [{
+                label: 'Transactions',
+                data: [{{ stats.totalEncryptions }}, 0, 0, {{ stats.totalHashes }}, {{ stats.totalKeyGens }}],
+                backgroundColor: ['#3b82f6', '#0d9488', '#6366f1', '#f59e0b', '#ec4899'],
+                borderRadius: 6
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false }
+            },
+            scales: {
+                y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#9ca3af' } },
+                x: { grid: { display: false }, ticks: { color: '#9ca3af' } }
+            }
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% block title %}About | Secure Text Encryption Suite Pro{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+    <div class="col-12">
+        <h2 class="fw-bold text-white"><i class="fa-solid fa-circle-info text-primary me-2"></i> About Cryptographic Console</h2>
+        <p class="text-secondary small">Technical specifications, libraries, and compliance metrics of Secure Text Encryption Suite Pro.</p>
+    </div>
+
+    <!-- Description Block -->
+    <div class="col-lg-7">
+        <div class="glass-card p-4 h-100 space-y-3">
+            <span class="badge rounded-pill bg-dark border border-primary-subtle text-primary font-monospace text-uppercase tracking-wider px-3 py-1.5 small mb-2 d-inline-block">
+                FIPS Compliant Cryptography
+            </span>
+            <h4 class="fw-bold text-light">Enterprise Compliance Shield</h4>
+            <p class="text-secondary small leading-relaxed">
+                Secure Text Encryption Suite Pro is a hardened, standalone client-side security architecture engineered for highly sensitive corporate cryptography, payload verification, and standard compliance testing. 
+            </p>
+            <p class="text-secondary small leading-relaxed">
+                By focusing on sandboxed processing, the platform is designed to handle key generation, multi-layered hashing, and symmetric/asymmetric block padding completely local. This removes any remote server telemetry vector, securing your master keys and raw data payloads from interception or caching.
+            </p>
+
+            <div class="border-top border-secondary border-opacity-25 pt-3 mt-4">
+                <span class="d-block font-monospace text-xs text-muted mb-3 uppercase tracking-wider">Cryptographic Protocols Supported</span>
+                <div class="row g-2 text-secondary small">
+                    <div class="col-6"><i class="fa-solid fa-circle-check text-primary me-1"></i> AES-256 CBC Mode</div>
+                    <div class="col-6"><i class="fa-solid fa-circle-check text-primary me-1"></i> RSA-2048 OAEP</div>
+                    <div class="col-6"><i class="fa-solid fa-circle-check text-primary me-1"></i> DES CBC (Legacy)</div>
+                    <div class="col-6"><i class="fa-solid fa-circle-check text-primary me-1"></i> MD5, SHA-1, SHA-2</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Telemetry Board -->
+    <div class="col-lg-5">
+        <div class="glass-card p-4 font-monospace small">
+            <h5 class="fw-bold text-white border-bottom border-secondary border-opacity-25 pb-2 mb-3"><i class="fa-solid fa-microchip text-info me-2"></i> Console Telemetry</h5>
+            
+            <div class="d-flex justify-content-between py-2 border-bottom border-secondary border-opacity-10">
+                <span class="text-muted">CORE STATUS</span>
+                <span class="text-success fw-bold">OPTIMAL</span>
+            </div>
+            <div class="d-flex justify-content-between py-2 border-bottom border-secondary border-opacity-10">
+                <span class="text-muted">VERSION</span>
+                <span class="text-light">v4.2.0-Enterprise</span>
+            </div>
+            <div class="d-flex justify-content-between py-2 border-bottom border-secondary border-opacity-10">
+                <span class="text-muted">FLASK RUNTIME</span>
+                <span class="text-light">Python 3.12 / Flask</span>
+            </div>
+            <div class="d-flex justify-content-between py-2 border-bottom border-secondary border-opacity-10">
+                <span class="text-muted">LIBS INCLUDED</span>
+                <span class="text-light text-end" style="max-width: 180px;">pycryptodome, cryptography</span>
+            </div>
+            <div class="d-flex justify-content-between py-2">
+                <span class="text-muted">DEVELOPER</span>
+                <span class="text-light font-sans">Senior Security Engineer</span>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

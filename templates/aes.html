@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+{% block title %}AES Encryption | Secure Text Encryption Suite Pro{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+    <div class="col-12">
+        <h2 class="fw-bold text-white"><i class="fa-solid fa-key text-primary me-2"></i> AES-256-CBC Cryptosystem</h2>
+        <p class="text-secondary small">Advanced symmetric standard block cipher using a 256-bit key. Secure random 128-bit Initialization Vector (IV) is automatically managed in the background.</p>
+    </div>
+
+    <!-- Parameter Config Column -->
+    <div class="col-lg-4">
+        <div class="glass-card p-4 space-y-4">
+            <h5 class="fw-bold text-white border-bottom border-secondary border-opacity-25 pb-2 mb-3">Parameters</h5>
+            
+            <form id="key-gen-form" class="d-flex flex-column gap-3">
+                <div>
+                    <label class="form-label text-secondary small font-monospace d-flex justify-content-between">
+                        <span>SECRET KEY (256-BIT)</span>
+                        <span style="font-size: 10px;">32 CHARS</span>
+                    </label>
+                    <input type="text" id="aes-key" name="key" value="{{ key }}" placeholder="Enter or generate key" class="form-control bg-dark border-secondary border-opacity-25 text-light font-monospace small">
+                </div>
+
+                <button type="button" onclick="generateKeys()" class="btn btn-outline-primary font-monospace small py-2">
+                    <i class="fa-solid fa-arrows-rotate me-2"></i> GENERATE SECRET KEY
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Execution Workspace Column -->
+    <div class="col-lg-8">
+        <div class="glass-card p-4">
+            <h5 class="fw-bold text-white border-bottom border-secondary border-opacity-25 pb-2 mb-3">Workspace</h5>
+
+            <form method="POST" action="{{ url_for('aes_view') }}" class="d-flex flex-column gap-3">
+                <input type="hidden" id="form-key" name="key" value="{{ key }}">
+                
+                <div>
+                    <label class="form-label text-secondary small font-monospace">INPUT PAYLOAD</label>
+                    <textarea name="input_text" rows="5" placeholder="Enter plaintext to encrypt, or ciphertext/base64 to decrypt..." class="form-control bg-dark border-secondary border-opacity-25 text-light font-monospace small">{{ input_text }}</textarea>
+                </div>
+
+                {% if error %}
+                    <div class="alert alert-danger border-danger border-opacity-25 bg-danger bg-opacity-10 text-danger small p-3 rounded-3" role="alert">
+                        <i class="fa-solid fa-circle-exclamation me-2"></i> {{ error }}
+                    </div>
+                {% endif %}
+
+                <!-- Controls -->
+                <div class="d-flex gap-3">
+                    <button type="submit" name="action" value="encrypt" onclick="syncKeys()" class="btn btn-primary flex-grow-1 py-3 font-monospace fw-bold tracking-wider" style="background: linear-gradient(135deg, #2563eb, #312e81); border: none;">
+                        ENCRYPT AES-256
+                    </button>
+                    <button type="submit" name="action" value="decrypt" onclick="syncKeys()" class="btn btn-success flex-grow-1 py-3 font-monospace fw-bold tracking-wider" style="background: linear-gradient(135deg, #0d9488, #064e3b); border: none;">
+                        DECRYPT AES-256
+                    </button>
+                    <button type="button" onclick="clearWorkspace()" class="btn btn-dark px-4 border border-secondary border-opacity-25">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                </div>
+            </form>
+
+            <!-- Output Container -->
+            {% if result %}
+                <div class="mt-4 pt-4 border-top border-secondary border-opacity-25">
+                    <label class="form-label text-success small font-monospace"><i class="fa-solid fa-circle-check me-1"></i> PROCESS COMPLETED</label>
+                    <pre class="bg-black bg-opacity-50 border border-success border-opacity-25 p-3 rounded-3 text-success font-monospace small text-wrap" style="max-height: 200px; overflow-y: auto;">{{ result }}</pre>
+                    <div class="d-flex gap-2 justify-content-end mt-2">
+                        <button type="button" onclick="copyToClipboard()" class="btn btn-sm btn-dark border border-secondary border-opacity-25 text-secondary"><i class="fa-solid fa-copy me-1"></i> Copy</button>
+                        <button type="button" onclick="saveAsFile()" class="btn btn-sm btn-dark border border-secondary border-opacity-25 text-secondary"><i class="fa-solid fa-download me-1"></i> Save</button>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    function syncKeys() {
+        document.getElementById('form-key').value = document.getElementById('aes-key').value;
+    }
+
+    function generateKeys() {
+        updateStatus('Generating secure AES key...', false);
+        const data = new FormData();
+        data.append('action', 'generate_key');
+        
+        fetch("{{ url_for('aes_view') }}", {
+            method: 'POST',
+            body: data
+        })
+        .then(res => res.json())
+        .then(json => {
+            document.getElementById('aes-key').value = json.key;
+            syncKeys();
+            updateStatus('AES key generated successfully', false);
+        })
+        .catch(err => {
+            updateStatus('Key generation failed', true);
+        });
+    }
+
+    function clearWorkspace() {
+        document.querySelector('textarea[name="input_text"]').value = '';
+        updateStatus('Cleared input workspace', false);
+    }
+
+    function copyToClipboard() {
+        const text = document.querySelector('pre').innerText;
+        navigator.clipboard.writeText(text);
+        updateStatus('Result copied to clipboard', false);
+    }
+
+    function saveAsFile() {
+        const text = document.querySelector('pre').innerText;
+        const blob = new Blob([text], {type: "text/plain;charset=utf-8"});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `aes-output-${Date.now()}.txt`;
+        a.click();
+        URL.revokeObjectURL(url);
+        updateStatus('Output saved successfully', false);
+    }
+</script>
+{% endblock %}

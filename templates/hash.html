@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% block title %}Hash Generator | Secure Text Encryption Suite Pro{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+    <div class="col-12">
+        <h2 class="fw-bold text-white"><i class="fa-solid fa-hashtag text-warning me-2"></i> Cryptographic Hash Generator</h2>
+        <p class="text-secondary small">Calculate secure, one-way cryptographic message digests to guarantee source data integrity.</p>
+    </div>
+
+    <!-- Parameter Config Column -->
+    <div class="col-lg-4">
+        <div class="glass-card p-4 space-y-4">
+            <h5 class="fw-bold text-white border-bottom border-secondary border-opacity-25 pb-2 mb-3">Digest Type</h5>
+            
+            <form id="hash-config-form" class="d-flex flex-column gap-3">
+                <div class="d-flex flex-column gap-2">
+                    <div class="form-check p-0">
+                        <input class="btn-check" type="radio" name="algo-select" id="algo-sha256" value="SHA-256" checked onclick="selectAlgo('SHA-256')">
+                        <label class="btn btn-outline-warning w-100 py-3 font-monospace small" for="algo-sha256">SHA-256 (Secure)</label>
+                    </div>
+                    <div class="form-check p-0">
+                        <input class="btn-check" type="radio" name="algo-select" id="algo-sha512" value="SHA-512" onclick="selectAlgo('SHA-512')">
+                        <label class="btn btn-outline-warning w-100 py-3 font-monospace small" for="algo-sha512">SHA-512 (Extreme)</label>
+                    </div>
+                    <div class="form-check p-0">
+                        <input class="btn-check" type="radio" name="algo-select" id="algo-sha1" value="SHA-1" onclick="selectAlgo('SHA-1')">
+                        <label class="btn btn-outline-warning w-100 py-3 font-monospace small" for="algo-sha1">SHA-1 (Legacy)</label>
+                    </div>
+                    <div class="form-check p-0">
+                        <input class="btn-check" type="radio" name="algo-select" id="algo-md5" value="MD5" onclick="selectAlgo('MD5')">
+                        <label class="btn btn-outline-warning w-100 py-3 font-monospace small" for="algo-md5">MD5 (Legacy)</label>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Execution Workspace Column -->
+    <div class="col-lg-8">
+        <div class="glass-card p-4">
+            <h5 class="fw-bold text-white border-bottom border-secondary border-opacity-25 pb-2 mb-3">Workspace</h5>
+
+            <form method="POST" action="{{ url_for('hash_view') }}" class="d-flex flex-column gap-3">
+                <input type="hidden" id="form-algo" name="algo" value="{{ algo }}">
+                
+                <div>
+                    <label class="form-label text-secondary small font-monospace">INPUT DATA</label>
+                    <textarea name="input_text" rows="5" placeholder="Enter plaintext, passphrase, or payload to hash..." class="form-control bg-dark border-secondary border-opacity-25 text-light font-monospace small">{{ input_text }}</textarea>
+                </div>
+
+                {% if error %}
+                    <div class="alert alert-danger border-danger border-opacity-25 bg-danger bg-opacity-10 text-danger small p-3 rounded-3" role="alert">
+                        <i class="fa-solid fa-circle-exclamation me-2"></i> {{ error }}
+                    </div>
+                {% endif %}
+
+                <!-- Controls -->
+                <div class="d-flex gap-3">
+                    <button type="submit" class="btn btn-warning flex-grow-1 py-3 font-monospace fw-bold tracking-wider text-dark">
+                        CALCULATE DIGEST
+                    </button>
+                    <button type="button" onclick="clearWorkspace()" class="btn btn-dark px-4 border border-secondary border-opacity-25">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                </div>
+            </form>
+
+            <!-- Output Container -->
+            {% if result %}
+                <div class="mt-4 pt-4 border-top border-secondary border-opacity-25">
+                    <label class="form-label text-warning small font-monospace"><i class="fa-solid fa-circle-check me-1"></i> CHECKSUM DIGEST GENERATED</label>
+                    <pre class="bg-black bg-opacity-50 border border-warning border-opacity-25 p-3 rounded-3 text-warning font-monospace small text-wrap" style="max-height: 200px; overflow-y: auto;">{{ result }}</pre>
+                    <div class="d-flex gap-2 justify-content-end mt-2">
+                        <button type="button" onclick="copyToClipboard()" class="btn btn-sm btn-dark border border-secondary border-opacity-25 text-secondary"><i class="fa-solid fa-copy me-1"></i> Copy</button>
+                        <button type="button" onclick="saveAsFile()" class="btn btn-sm btn-dark border border-secondary border-opacity-25 text-secondary"><i class="fa-solid fa-download me-1"></i> Save</button>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    function selectAlgo(val) {
+        document.getElementById('form-algo').value = val;
+    }
+
+    function clearWorkspace() {
+        document.querySelector('textarea[name="input_text"]').value = '';
+        updateStatus('Cleared workspace', false);
+    }
+
+    function copyToClipboard() {
+        const text = document.querySelector('pre').innerText;
+        navigator.clipboard.writeText(text);
+        updateStatus('Result copied to clipboard', false);
+    }
+
+    function saveAsFile() {
+        const text = document.querySelector('pre').innerText;
+        const blob = new Blob([text], {type: "text/plain;charset=utf-8"});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        const currentAlgo = document.getElementById('form-algo').value;
+        a.download = `${currentAlgo.toLowerCase()}-hash-${Date.now()}.txt`;
+        a.click();
+        URL.revokeObjectURL(url);
+        updateStatus('Output saved successfully', false);
+    }
+</script>
+{% endblock %}

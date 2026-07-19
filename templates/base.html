@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Secure Text Encryption Suite Pro{% endblock %}</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: radial-gradient(ellipse at top right, #111827, #030712);
+            color: #f3f4f6;
+            font-family: 'Inter', sans-serif;
+            min-h: 100vh;
+            overflow-x: hidden;
+        }
+        
+        /* Glassmorphism Classes */
+        .glass-card {
+            background: rgba(17, 24, 39, 0.45);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .glass-card:hover {
+            border-color: rgba(59, 130, 246, 0.25);
+            box-shadow: 0 12px 40px 0 rgba(59, 130, 246, 0.1);
+        }
+
+        .glass-sidebar {
+            background: rgba(3, 7, 18, 0.85);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 260px;
+            z-index: 100;
+            padding-top: 20px;
+        }
+
+        .main-content {
+            margin-left: 260px;
+            padding: 40px;
+            min-height: calc(100vh - 40px);
+            padding-bottom: 80px;
+        }
+
+        @media (max-width: 992px) {
+            .glass-sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease-in-out;
+            }
+            .glass-sidebar.show {
+                transform: translateX(0);
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 20px;
+            }
+        }
+
+        /* Nav links */
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            color: #9ca3af;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            border-left: 3px solid transparent;
+            transition: all 0.2s ease;
+        }
+        .sidebar-link:hover, .sidebar-link.active {
+            color: #3b82f6;
+            background: rgba(59, 130, 246, 0.05);
+            border-left-color: #3b82f6;
+        }
+
+        /* Custom glow accents */
+        .glow-blue {
+            text-shadow: 0 0 15px rgba(59, 130, 246, 0.6);
+        }
+        .glow-teal {
+            text-shadow: 0 0 15px rgba(20, 184, 166, 0.6);
+        }
+
+        /* Status Bar styles */
+        .bottom-status-bar {
+            position: fixed;
+            bottom: 0;
+            left: 260px;
+            right: 0;
+            height: 40px;
+            background: rgba(3, 7, 18, 0.9);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            font-size: 11px;
+            font-family: 'JetBrains Mono', monospace;
+            color: #9ca3af;
+        }
+        @media (max-width: 992px) {
+            .bottom-status-bar {
+                left: 0;
+            }
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #030712;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1f2937;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #374151;
+        }
+    </style>
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+    {% if self.welcome_page() %}
+        {% block welcome_content %}{% endblock %}
+    {% else %}
+        <!-- Sidebar Navigation -->
+        <aside class="glass-sidebar" id="sidebar">
+            <div class="px-4 mb-4">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="bg-dark border border-primary-subtle rounded p-2 text-center" style="width: 44px; height: 44px;">
+                        <i class="fa-solid fa-shield-halved text-primary fs-5"></i>
+                    </div>
+                    <div>
+                        <h6 class="m-0 font-weight-bold tracking-wider text-light">SECURE SUITE</h6>
+                        <span class="text-xs text-info" style="font-size: 10px;">PRO ENTERPRISE</span>
+                    </div>
+                </div>
+                <hr class="border-secondary opacity-25 my-4">
+            </div>
+
+            <nav class="d-flex flex-column gap-1">
+                <a href="{{ url_for('dashboard') }}" class="sidebar-link {% if request.path == '/dashboard' %}active{% endif %}">
+                    <i class="fa-solid fa-chart-line"></i> Dashboard
+                </a>
+                <a href="{{ url_for('aes_view') }}" class="sidebar-link {% if request.path == '/aes' %}active{% endif %}">
+                    <i class="fa-solid fa-key"></i> AES Encryption
+                </a>
+                <a href="{{ url_for('des_view') }}" class="sidebar-link {% if request.path == '/des' %}active{% endif %}">
+                    <i class="fa-solid fa-triangle-exclamation"></i> DES Legacy
+                </a>
+                <a href="{{ url_for('rsa_view') }}" class="sidebar-link {% if request.path == '/rsa' %}active{% endif %}">
+                    <i class="fa-solid fa-fingerprint"></i> RSA Asymmetric
+                </a>
+                <a href="{{ url_for('hash_view') }}" class="sidebar-link {% if request.path == '/hash' %}active{% endif %}">
+                    <i class="fa-solid fa-hashtag"></i> Hash Generator
+                </a>
+                <a href="{{ url_for('history_view') }}" class="sidebar-link {% if request.path == '/history' %}active{% endif %}">
+                    <i class="fa-solid fa-clock-rotate-left"></i> Audit Logs
+                </a>
+                <a href="{{ url_for('about_view') }}" class="sidebar-link {% if request.path == '/about' %}active{% endif %}">
+                    <i class="fa-solid fa-circle-info"></i> About System
+                </a>
+                <a href="{{ url_for('settings_view') }}" class="sidebar-link {% if request.path == '/settings' %}active{% endif %}">
+                    <i class="fa-solid fa-gear"></i> Settings
+                </a>
+                <a href="{{ url_for('welcome') }}" class="sidebar-link mt-4 text-danger-emphasis">
+                    <i class="fa-solid fa-lock"></i> Lock Console
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Workspace container -->
+        <main class="main-content">
+            <!-- Mobile Toggle -->
+            <button class="btn btn-dark d-lg-none border border-secondary mb-3" onclick="document.getElementById('sidebar').classList.toggle('show')">
+                <i class="fa-solid fa-bars"></i> Menu
+            </button>
+            
+            {% block content %}{% endblock %}
+        </main>
+
+        <!-- Persistent Bottom Status Bar -->
+        <footer class="bottom-status-bar">
+            <div>
+                <i class="fa-solid fa-check-circle text-success me-2 animate-pulse"></i>
+                <span>CONSOLE STATUS: </span>
+                <span class="text-light" id="footer-status">Ready</span>
+            </div>
+            <div class="d-none d-sm-block">
+                <i class="fa-solid fa-microchip text-info me-1"></i>
+                <span>FIPS CORE: ACTIVE</span>
+            </div>
+        </footer>
+    {% endif %}
+
+    <!-- Bootstrap Bundle JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Common footer status updater
+        function updateStatus(msg, isError = false) {
+            const el = document.getElementById('footer-status');
+            if (el) {
+                el.innerText = msg;
+                if (isError) {
+                    el.className = 'text-danger';
+                } else {
+                    el.className = 'text-success';
+                }
+            }
+        }
+    </script>
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>

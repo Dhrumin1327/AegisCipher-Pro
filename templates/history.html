@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+{% block title %}Audit Trail | Secure Text Encryption Suite Pro{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+    <div class="col-12 d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3">
+        <div>
+            <h2 class="fw-bold text-white"><i class="fa-solid fa-clock-rotate-left text-primary me-2"></i> Security Audit Trail</h2>
+            <p class="text-secondary small">Real-time tamper-evident record of all cryptographic key operations and symmetric algorithms.</p>
+        </div>
+        
+        {% if history %}
+            <div class="d-flex gap-2">
+                <button onclick="exportHistory()" class="btn btn-outline-light font-monospace text-xs py-2 px-3"><i class="fa-solid fa-download me-1"></i> EXPORT JSON</button>
+                <button onclick="clearHistory()" class="btn btn-outline-danger font-monospace text-xs py-2 px-3"><i class="fa-solid fa-trash-can me-1"></i> PURGE AUDIT</button>
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="col-12">
+        <div class="glass-card p-4">
+            <!-- Table Controls -->
+            <div class="row g-3 align-items-center mb-4">
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <span class="input-group-text bg-dark border-secondary border-opacity-25 text-secondary"><i class="fa-solid fa-magnifying-glass"></i></span>
+                        <input type="text" id="logSearch" placeholder="Search operations, details..." class="form-control bg-dark border-secondary border-opacity-25 text-light" onkeyup="filterLogs()">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Table -->
+            {% if not history %}
+                <div class="text-center py-5 text-muted small">
+                    <i class="fa-solid fa-shield-halved d-block mb-3 fs-2 opacity-25"></i>
+                    No cryptographic operations have been logged.
+                </div>
+            {% else %}
+                <div class="table-responsive rounded-3 border border-secondary border-opacity-10">
+                    <table class="table table-dark table-hover m-0 align-middle small font-monospace" id="auditTable">
+                        <thead>
+                            <tr class="text-secondary small border-bottom border-secondary border-opacity-25">
+                                <th class="py-3 px-4">TIMESTAMP</th>
+                                <th class="py-3 px-4">ALGORITHM</th>
+                                <th class="py-3 px-4">OPERATION</th>
+                                <th class="py-3 px-4">STATUS</th>
+                                <th class="py-3 px-4">USER ACTION AUDIT</th>
+                                <th class="py-3 px-4 text-center">ACTION</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for log in history %}
+                                <tr class="border-bottom border-secondary border-opacity-10">
+                                    <td class="py-3 px-4 text-secondary">{{ log.timestamp }}</td>
+                                    <td class="py-3 px-4"><span class="badge bg-secondary">{{ log.algorithm }}</span></td>
+                                    <td class="py-3 px-4 fw-bold text-light">{{ log.operation }}</td>
+                                    <td class="py-3 px-4">
+                                        {% if log.status == 'Success' %}
+                                            <span class="badge bg-success-subtle text-success border border-success border-opacity-25">Success</span>
+                                        {% else %}
+                                            <span class="badge bg-danger-subtle text-danger border border-danger border-opacity-25">Error</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="py-3 px-4 text-secondary text-truncate font-sans" style="max-width: 280px;" title="{{ log.detail }}">{{ log.detail }}</td>
+                                    <td class="py-3 px-4 text-center">
+                                        <button onclick="deleteLog('{{ log.id }}')" class="btn btn-sm btn-outline-danger p-1.5"><i class="fa-solid fa-trash-can"></i></button>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    function filterLogs() {
+        const input = document.getElementById("logSearch").value.toLowerCase();
+        const rows = document.querySelectorAll("#auditTable tbody tr");
+        
+        rows.forEach(row => {
+            const text = row.innerText.toLowerCase();
+            if (text.includes(input)) {
+                row.style.display = "";
+            } else {
+                row.style.display = "none";
+            }
+        });
+    }
+
+    function deleteLog(id) {
+        if (confirm('Delete this audit trail item?')) {
+            updateStatus('Deleting audit log...', false);
+            fetch(`/api/history/delete/${id}`, { method: 'POST' })
+            .then(res => res.json())
+            .then(() => {
+                location.reload();
+            });
+        }
+    }
+
+    function clearHistory() {
+        if (confirm('PROCEED WITH ENTIRE LOG DESTRUCTION? This is irreversible.')) {
+            updateStatus('Clearing system audit logs...', false);
+            fetch('/api/history/clear', { method: 'POST' })
+            .then(res => res.json())
+            .then(() => {
+                location.reload();
+            });
+        }
+    }
+
+    function exportHistory() {
+        updateStatus('Exporting history...', false);
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({{ history|tojson }}, null, 2));
+        const downloadAnchor = document.createElement('a');
+        downloadAnchor.setAttribute("href",     dataStr);
+        downloadAnchor.setAttribute("download", `security-audit-history-${Date.now()}.json`);
+        document.body.appendChild(downloadAnchor);
+        downloadAnchor.click();
+        downloadAnchor.remove();
+        updateStatus('History exported successfully', false);
+    }
+</script>
+{% endblock %}

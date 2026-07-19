@@ -1,0 +1,6 @@
+{
+  "name": "AegisCipher Pro",
+  "description": "An enterprise-grade cybersecurity suite featuring robust symmetric (AES, DES) and asymmetric (RSA) encryption, secure hashing algorithms, and action logging in a premium, glassmorphic dark interface of AegisCipher Pro.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
