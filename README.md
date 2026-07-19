@@ -1,4 +1,5 @@
 # AegisCipher-Pro
+# AegisCipher Pro 🛡️
 
 AegisCipher Pro is an enterprise-grade, highly polished commercial-grade cybersecurity console tailored for digital compliance, security audits, and offline-first text payload protection. It features a modern, ultra-responsive web application that is fully standalone and optimized for running on localhost inside Visual Studio Code.
 
