@@ -46,36 +46,6 @@ This project was developed as **Task 01** during my **Cybersecurity Internship a
 
 ---
 
-# 🖥️ Screenshots
-
-> Replace these with your own screenshots.
-
-## Welcome Screen
-
-```
-assets/welcome.png
-```
-
-## Dashboard
-
-```
-assets/dashboard.png
-```
-
-## AES Encryption
-
-```
-assets/aes.png
-```
-
-## RSA Encryption
-
-```
-assets/rsa.png
-```
-
----
-
 # 🛠️ Built With
 
 | Technology | Purpose |
