@@ -86,32 +86,79 @@ This project was developed as **Task 01** during my **Cybersecurity Internship a
 
 ---
 
-# 🚀 Installation
+# 🚀 Installation Guide
 
-## Clone Repository
+## 1️⃣ Clone the Repository
 
 ```bash
 git clone https://github.com/Dhrumin1327/AegisCipher-Pro.git
 ```
 
-Move into the project
+Navigate to the project folder:
 
 ```bash
 cd AegisCipher-Pro
 ```
 
-Install dependencies
+---
+
+## 2️⃣ Create a Virtual Environment (Recommended)
+
+### Windows
+
+```bash
+python -m venv venv
+venv\Scripts\activate
+```
+
+### Linux/macOS
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
+
+---
+
+## 3️⃣ Install Python Dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-Run
+---
+
+## 4️⃣ Install Node.js Dependencies
 
 ```bash
-python main.py
+npm install
 ```
 
+---
+
+## 5️⃣ Start the Frontend
+
+```bash
+npm run dev
+```
+
+The application will be available at:
+
+```
+http://localhost:5173
+```
+
+---
+
+## ✅ You're Ready!
+
+Open your browser and visit:
+
+```
+http://localhost:5173
+```
+
+Enjoy using **AegisCipher Pro**! 🔐
 ---
 
 # 📂 Project Structure
@@ -165,6 +212,7 @@ This project helped me gain practical knowledge in:
 Watch the project demo on LinkedIn.
 
 📹 Demo Video Included
+https://www.linkedin.com/posts/dhrumin-patel-0412792a5_pinnaclelabs-pinnaclelabsinternship-aegiscipherpro-ugcPost-7484579756181614592-wU76/?utm_source=share&utm_medium=member_android&rcm=ACoAAEmLW_EB-M_hQJG4-gQvt0AwnBQBzMyNaPE
 
 ---
 
